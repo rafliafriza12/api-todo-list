@@ -1,6 +1,11 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const options = {
   definition: {
@@ -12,17 +17,17 @@ const options = {
     },
     servers: [
       {
-        url: "https://api-todo-list-pbw.vercel.app", // Sesuaikan dengan base URL API
+        url: process.env.API_BASE_URL || "https://api-todo-list-pbw.vercel.app",
       },
     ],
   },
-  apis: [path.resolve("routes/*.js")], // Pastikan sesuai dengan lokasi file route kamu
+  apis: [path.join(__dirname, "../routes/*.js")], // Pastikan path sesuai
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 
 const swaggerDocs = (app) => {
-  app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Gunakan "/docs"
 };
 
 export default swaggerDocs;
