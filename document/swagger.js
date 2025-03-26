@@ -17,7 +17,7 @@ const options = {
     },
     servers: [
       {
-        url: process.env.API_BASE_URL || "https://api-todo-list-pbw.vercel.app",
+        url: "https://api-todo-list-pbw.vercel.app",
       },
     ],
   },
