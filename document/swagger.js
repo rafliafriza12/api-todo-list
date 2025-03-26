@@ -1,11 +1,5 @@
-import path from "path";
-import { fileURLToPath } from "url";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-
-// Untuk ESM module, dapatkan __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const options = {
   definition: {
@@ -21,17 +15,13 @@ const options = {
       },
     ],
   },
-  apis: [
-    path.join(__dirname, "routes", "*.js"), // Gunakan path.join untuk resolving
-    // Atau gunakan path absolut penuh
-    // `/var/task/routes/*.js` (sesuaikan dengan struktur Vercel)
-  ],
+  apis: ["./routes/*.js"], // Pastikan path sesuai
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 
 const swaggerDocs = (app) => {
-  app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Tambahkan "/docs"
+  app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Gunakan "/docs"
 };
 
 export default swaggerDocs;
