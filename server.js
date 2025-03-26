@@ -34,6 +34,7 @@ async function connectDB() {
 
 app.use("/auth", authRouter);
 app.use("/todo", todoRouter);
+
 swaggerDocs(app);
 
 connectDB()
