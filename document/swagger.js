@@ -12,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5000", // Sesuaikan dengan base URL API
+        url: "https://api-todo-list-pbw.vercel.app", // Sesuaikan dengan base URL API
       },
     ],
   },
