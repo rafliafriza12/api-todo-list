@@ -7,10 +7,9 @@ import authRouter from "./routes/authRouter.js";
 import todoRouter from "./routes/todoRouter.js";
 import swaggerDocs from "./document/swagger.js";
 
-const port = 5000;
+configDotenv();
 
 const app = express();
-configDotenv();
 app.use(cors({ origin: "*", optionsSuccessStatus: 200 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -23,24 +22,17 @@ const clientOptions = {
 async function connectDB() {
   try {
     await mongoose.connect(process.env.MONGO_URI, clientOptions);
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    console.log("Connected to MongoDB!");
   } catch (error) {
     console.error("Koneksi ke MongoDB gagal:", error);
-    process.exit(1); // Keluar dari proses jika koneksi gagal
+    process.exit(1);
   }
 }
 
 app.use("/auth", authRouter);
 app.use("/todo", todoRouter);
-
 swaggerDocs(app);
 
-connectDB()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-    });
-  })
-  .catch(console.dir);
+connectDB();
+
+export default app; // Untuk Vercel
