@@ -5,7 +5,9 @@ import bodyParser from "body-parser";
 import { configDotenv } from "dotenv";
 import authRouter from "./routes/authRouter.js";
 import todoRouter from "./routes/todoRouter.js";
-import swaggerDocs from "./document/swagger.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+// import swaggerDocs from "./document/swagger.js";
 
 const port = 5000;
 
@@ -15,6 +17,30 @@ app.use(cors({ origin: "*", optionsSuccessStatus: 200 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Todo API",
+      version: "1.0.0",
+      description: "API Documentation for Todo Application",
+    },
+    servers: [
+      {
+        url: "https://api-todo-list-pbw.vercel.app", // Sesuaikan dengan URL deploy
+        description: "Production Server",
+      },
+      {
+        url: "http://localhost:5000",
+        description: "Local Development Server",
+      },
+    ],
+  },
+  apis: [
+    "./routes/*.js", // Pastikan path benar
+  ],
+};
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
@@ -35,7 +61,16 @@ async function connectDB() {
 app.use("/auth", authRouter);
 app.use("/todo", todoRouter);
 
-swaggerDocs(app);
+const swaggerSpec = swaggerJSDoc(options);
+
+// Middleware Swagger
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Optional: Endpoint untuk mendapatkan Swagger JSON
+app.get("/swagger.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
 
 connectDB()
   .then(() => {
