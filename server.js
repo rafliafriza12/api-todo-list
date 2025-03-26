@@ -7,6 +7,16 @@ import authRouter from "./routes/authRouter.js";
 import todoRouter from "./routes/todoRouter.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+export const __swaggerDistPath = path.join(
+  __dirname,
+  "node_modules",
+  "swagger-ui-dist"
+);
+
 // import swaggerDocs from "./document/swagger.js";
 
 const port = 5000;
@@ -64,13 +74,12 @@ app.use("/todo", todoRouter);
 const swaggerSpec = swaggerJSDoc(options);
 
 // Middleware Swagger
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// Optional: Endpoint untuk mendapatkan Swagger JSON
-app.get("/swagger.json", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  res.send(swaggerSpec);
-});
+app.use(
+  "/",
+  express.static(__swaggerDistPath, { index: false }),
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
 
 connectDB()
   .then(() => {
