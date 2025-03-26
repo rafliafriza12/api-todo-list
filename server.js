@@ -11,8 +11,16 @@ import path from "path";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Metode 1: Resolusi root path menggunakan relative path
+const _rootPath = path.resolve(__dirname, "../../");
+
+// Metode 2: Alternatif menggunakan current working directory
+// const _rootPath = process.cwd();
+
+// Path untuk distribusi Swagger UI
 export const __swaggerDistPath = path.join(
-  __dirname,
+  _rootPath, // Gunakan _rootPath yang sudah di-resolve
   "node_modules",
   "swagger-ui-dist"
 );
